@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 class User(models.Model):
     id_u = models.AutoField(primary_key=True)
@@ -14,6 +15,17 @@ class User(models.Model):
     id_lv_u = models.IntegerField()
     cDate_u = models.DateTimeField()
     uDate_u = models.DateTimeField()
+
+    # การใช้ @classmethod ทำให้คุณสามารถเรียก method ได้จากตัว class โดยไม่จำเป็นต้องสร้าง instance ของ class ก่อน
+    @classmethod
+    def getUserById(self, userid):
+        """
+        ดึงข้อมูล User จาก id_u
+        """
+        try:
+            return self.objects.get(id_u=userid)
+        except ObjectDoesNotExist:
+            return None 
 
     class Meta:
         managed = False
