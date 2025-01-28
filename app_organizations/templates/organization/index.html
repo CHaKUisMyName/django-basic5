@@ -1,0 +1,64 @@
+{%extends "layout.html" %} {% block title %}
+<title>Organization index</title>
+{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1>Organization Index</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <a href="{% url 'addOrg' %}">
+      <span>Add Organization</span>
+    </a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="card border-0">
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Code</th>
+              <th>Name TH</th>
+              <th>Name EN</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if orgList is not defined %}
+            <tr>
+              <td colspan="6">
+                <span>No Data !</span>
+              </td>
+            </tr>
+            {% endif %} {% for org in orgList %}
+            <tr>
+              <td>{{org.id_org}}</td>
+              <td>{{org.code_org}}</td>
+              <td>{{org.nameTH_org}}</td>
+              <td>{{org.nameEN_org}}</td>
+              <td>
+                <a href="#" class="btn btn-info">
+                  <i class="bi bi-pencil-square me-2"></i>
+                  <span>Edit</span>
+                </a>
+              </td>
+              <td>
+                <a href="#" class="btn btn-danger">
+                  <i class="bi bi-trash me-2"></i>
+                  <span>Delete</span>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

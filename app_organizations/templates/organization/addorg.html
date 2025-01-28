@@ -1,0 +1,45 @@
+{%extends "layout.html" %} {% block title %}
+<title>Organization Add</title>
+{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1>Add Organization</h1>
+  </div>
+</div>
+<div class="card border-0">
+  <div class="card-body">
+    <form method="post" class="row g-3" action="{% url 'addOrg' %}">
+      {% csrf_token %}
+      <div class="col-md-2 col-sm-12">
+        <label class="form-label" for="code">Org. Code</label>
+        <input type="text" name="code" id="code" class="form-control" />
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <label for="nameth" class="form-label">Name TH</label>
+        <input type="text" id="nameth" name="nameth" class="form-control" />
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <label for="nameen" class="form-label">Name EN</label>
+        <input type="text" id="nameen" name="nameen" class="form-control" />
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input
+            type="checkbox"
+            id="isactive"
+            name="isactive"
+            class="form-check-input"
+          />
+          <label for="isactive" class="form-check-label">Is Active</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <a href="{% url 'indexOrg' %}" class="btn btn-secondary">
+          <span>Back</span>
+        </a>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
