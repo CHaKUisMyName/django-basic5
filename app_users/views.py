@@ -37,10 +37,12 @@ def index(request: HttpRequest):
             for org in orgList:
                 if user.id_org_u == org.id_org:
                     orgName = org.nameEN_org
+        code = user.code_u if user.code_u is not None else "-"
+
         userList.append(
             {
                 'id_u':user.id_u,
-                'fullName': user.fName_u+" "+user.lName_u,
+                'fullName': "( "+code+" ) "+user.fName_u+" "+user.lName_u,
                 'hasAccount': any(authUser.id_u_auth == user.id_u for authUser in authUsers),
                 "orgName": orgName
             }
@@ -138,7 +140,26 @@ def editUser(request: HttpRequest, iduser):
     selectNull.nameEN_org = "please select"
     orgs.append(selectNull)
     orgs.reverse()
-    
+    if request.method == "POST":
+        user.code_u = request.POST.get('code')
+        user.title_u = request.POST.get('title')
+        user.fName_u = request.POST.get('fname')
+        user.mName_u = request.POST.get('mname')
+        user.lName_u = request.POST.get('lname')
+        user.email_u = request.POST.get('email')
+        user.isAdmin_u = 1 if request.POST.get('isadmin') is not None else 0
+        user.uDate_u = now()
+        user.id_org_u = request.POST.get('org')
+        user.save()
+
+        authUser = AuthUser.objects.filter(id_u_auth = iduser).first()
+        if authUser is not None:
+            authUser.email_auth = request.POST.get('email')
+            authUser.save()
+
+        response = HttpResponseRedirect(reverse('userIndex'))
+        return response
+
 
     context = {
         'user': user,
