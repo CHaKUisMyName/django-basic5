@@ -8,7 +8,10 @@
     </div>
     <div class="card border-0">
         <div class="card-body">
+            <!-- <form method="post" class="row g-3" action="{% url 'editOrg' org.id_org %}"> -->
             <form method="post" class="row g-3">
+                {% csrf_token %}
+                <input type="hidden" value="{{ org.id_org }}" />
                 <div class="col-md-2 col-sm-12">
                     <label class="form-label" for="code">Org. Code</label>
                     <input type="text"

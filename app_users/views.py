@@ -8,6 +8,7 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils.timezone import now,localtime
 import pytz
+from app_organizations.models import Organization
 from app_users.models.authsession import AuthSession
 from app_users.models.authuser import AuthUser, verify_password
 from app_users.models.level import Level
@@ -26,13 +27,22 @@ def index(request: HttpRequest):
 
     users = User.objects.all()
     authUsers = AuthUser.objects.all()
+    orgsObj = Organization.objects.filter(isActive_org = 1)
+
     userList = []
     for user in users:
+        orgName = ""
+        if orgsObj is not None:
+            orgList:list[Organization] = list(orgsObj)
+            for org in orgList:
+                if user.id_org_u == org.id_org:
+                    orgName = org.nameEN_org
         userList.append(
             {
                 'id_u':user.id_u,
                 'fullName': user.fName_u+" "+user.lName_u,
-                'hasAccount': any(authUser.id_u_auth == user.id_u for authUser in authUsers)
+                'hasAccount': any(authUser.id_u_auth == user.id_u for authUser in authUsers),
+                "orgName": orgName
             }
         )
 
@@ -87,6 +97,7 @@ def logout(request: HttpRequest):
 @custom_is_login    
 def addUser(request: HttpRequest):
     if request.method == "POST":
+        print(request.POST.get('org'))
         user = User()
         user.title_u = request.POST.get('title')
         user.fName_u = request.POST.get('fname')
@@ -95,15 +106,45 @@ def addUser(request: HttpRequest):
         user.email_u = request.POST.get('email')
         user.isAdmin_u = 1 if request.POST.get('isadmin') is not None else 0
         user.isActive_u = 1
+        user.cDate_u = now()
+        user.uDate_u = now()
+        user.id_org_u = request.POST.get('org')
         user.save()
-        print(user.__dict__)
+        # print(user.__dict__)
 
         response = HttpResponseRedirect(reverse('userIndex'))
         return response
         # print(request.POST.get('isadmin')) # จะคืนค่า "on" ถ้าติ๊ก, หรือ None ถ้าไม่ได้ติ๊ก
     else:
-        pass
-    return render(request, 'user/adduser.html')
+        orgs:list[Organization] = list(Organization.objects.filter(isActive_org = 1).order_by('-id_org'))
+        selectNull = Organization()
+        selectNull.id_org = 0
+        selectNull.nameEN_org = "please select"
+        orgs.append(selectNull)
+        orgs.reverse()
+
+        context = {
+            'orgs':orgs
+        }
+    return render(request, 'user/adduser.html', context)
+
+@custom_is_login
+def editUser(request: HttpRequest, iduser):
+    user = User.objects.filter(id_u = iduser).first()
+    # print(user.__dict__)
+    orgs:list[Organization] = list(Organization.objects.filter(isActive_org = 1).order_by('-id_org'))
+    selectNull = Organization()
+    selectNull.id_org = 0
+    selectNull.nameEN_org = "please select"
+    orgs.append(selectNull)
+    orgs.reverse()
+    
+
+    context = {
+        'user': user,
+        'orgs':orgs,
+    }
+    return render(request, 'user/edituser.html', context)
 
 @custom_is_login
 def regis(request: HttpRequest, id_u):

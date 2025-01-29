@@ -1,8 +1,7 @@
-{%extends "layout.html" %} {% block title %}
-<title>User index</title>
-{% endblock %} {% block content %}
-
-<!-- <div class="row">
+{% extends "layout.html" %}
+{% block title %}<title>User index</title>{% endblock %}
+{% block content %}
+  <!-- <div class="row">
   <div class="col-12">
     <ul>
       {%for level in levels%}
@@ -16,63 +15,69 @@
     <hr />
   </div>
 </div> -->
-<div class="row">
-  <div class="col-12">
-    <h1>Member</h1>
-    <a href="adduser">Add User</a>
-    <div class="card border-0">
-      <div class="card-body">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Full Name</th>
-              <th>Register</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for user in userList %}
-            <tr>
-              <td>{{ user.id_u }}</td>
-              <td>{{ user.fullName }}</td>
-              <td>
-                {% if user.hasAccount %}
-                <!-- ซ่อนปุ่ม Register หาก user มี account -->
-
-                <button type="button" class="btn btn-secondary disabled">
-                  Registered
-                </button>
-                {% else %}
-                <!-- <a href="/regis/{{ user.id_u }}" class="btn btn-warning"
-              >Register</a
-            > -->
-                <a
-                  href="{% url 'userRegis' user.id_u %}"
-                  class="btn btn-warning"
-                  >Register</a
-                >
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+  <div class="row">
+    <div class="col-12">
+      <h1>Member</h1>
+      <a href="adduser">Add User</a>
+      <div class="card border-0">
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Full Name</th>
+                <th>Organization</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Register</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in userList %}
+                <tr>
+                  <td>{{ user.id_u }}</td>
+                  <td>{{ user.fullName }}</td>
+                  <td>{{ user.orgName }}</td>
+                  <td>
+                    <a href="{% url 'editUser' user.id_u %}" class="btn btn-info">
+                      <i class="bi bi-pencil-square me-2"></i>
+                      <span>Edit</span>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#" class="btn btn-danger">
+                      <i class="bi bi-trash"></i>
+                      <span>Delete</span>
+                    </a>
+                  </td>
+                  <td>
+                    {% if user.hasAccount %}
+                      <!-- ซ่อนปุ่ม Register หาก user มี account -->
+                      <button type="button" class="btn btn-secondary disabled">Registered</button>
+                    {% else %}
+                      <!-- <a href="/regis/{{ user.id_u }}" class="btn btn-warning">Register</a> -->
+                      <a href="{% url 'userRegis' user.id_u %}" class="btn btn-warning">Register</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <p>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Pariatur saepe
-      rerum nostrum non quam totam dolores magni, nulla maiores, quasi
-      inventore! Dolor, nostrum rerum tempore minima quia quidem magni adipisci?
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat beatae
-      aliquid ab quo magni nulla praesentium quos corporis recusandae unde!
-      Cupiditate repellendus dicta architecto corrupti sunt non quae, illo
-      cumque.
-    </p>
+  <div class="row">
+    <div class="col-12">
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Pariatur saepe
+        rerum nostrum non quam totam dolores magni, nulla maiores, quasi
+        inventore! Dolor, nostrum rerum tempore minima quia quidem magni adipisci?
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat beatae
+        aliquid ab quo magni nulla praesentium quos corporis recusandae unde!
+        Cupiditate repellendus dicta architecto corrupti sunt non quae, illo
+        cumque.
+      </p>
+    </div>
   </div>
-</div>
-
 {% endblock %}

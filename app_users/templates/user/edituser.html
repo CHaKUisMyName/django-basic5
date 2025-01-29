@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block title %}<title>User Edit</title>{% endblock %}
+{% block content %}
+    <div class="row mt-3 mb-3">
+        <div class="col-12">
+            <h1>Edit User</h1>
+        </div>
+    </div>
+    <div class="card border-0">
+        <div class="card-body">
+            <form class="row g-3" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ user.id_u }}" />
+                <div class="col-md-2">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text"
+                           id="title"
+                           name="title"
+                           class="form-control"
+                           value="{{ user.title_u }}" />
+                </div>
+                <div class="col-md-4">
+                    <label for="fname" class="form-label">First Name</label>
+                    <input type="text"
+                           id="fname"
+                           name="fname"
+                           class="form-control"
+                           value="{{ user.fName_u }}" />
+                </div>
+                <div class="col-md-2">
+                    <label for="mname" class="form-label">Middle Name</label>
+                    <input type="text"
+                           id="mname"
+                           name="mname"
+                           class="form-control"
+                           value="{{ user.mName_u }}" />
+                </div>
+                <div class="col-md-4">
+                    <label for="lname" class="form-label">Last Name</label>
+                    <input type="text"
+                           id="lname"
+                           name="lname"
+                           class="form-control"
+                           value="{{ user.lName_u }}" />
+                </div>
+                <div class="col-md-2 col-sm-12">
+                    <label for="code" class="form-label">Employee Code</label>
+                    <input type="text"
+                           id="code"
+                           name="code"
+                           class="form-control"
+                           value="{{ user.code_u }}" />
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           class="form-control"
+                           value="{{ user.email_u }}" />
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <label for="org" class="form-label">Organization</label>
+                    <select id="org" name="org" class="form-select">
+                        {% for org in orgs %}
+                            {% if user.id_org_u == org.id_org %}
+                                <option value="{{ org.id_org }}" selected>{{ org.nameEN_org }}</option>
+                            {% else %}
+                                <option value="{{ org.id_org }}">{{ org.nameEN_org }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        {% if user.isAdmin_u == 1 %}
+                            <input type="checkbox"
+                                   id="isadmin"
+                                   name="isadmin"
+                                   class="form-check-input"
+                                   checked />
+                        {% else %}
+                            <input type="checkbox" id="isadmin" name="isadmin" class="form-check-input" />
+                        {% endif %}
+                        <label for="isadmin" class="form-check-label">Is Admin</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <a href="/user" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

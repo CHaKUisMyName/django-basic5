@@ -10,7 +10,7 @@ from app_users.utils import custom_is_login
 
 @custom_is_login
 def index(request: HttpRequest):
-    orgList = Organization.objects.all()
+    orgList = Organization.objects.filter(isActive_org = 1)
     context = {
         "orgList": orgList,
     }
@@ -52,11 +52,40 @@ def addOrganization(request: HttpRequest):
 
 @custom_is_login
 def editOrganization(request: HttpRequest, orgid):
+    curUser: User = request.current_user
     org = Organization.objects.filter(id_org = orgid).first()
     if org is None:
         messages.error(request,'Not Found Data')
         return HttpResponseRedirect(reverse('indexOrg'))
+    
+    if request.method == "POST":
+        try:
+            org.code_org = request.POST.get('code')
+            org.nameTH_org = request.POST.get('nameth')
+            org.nameEN_org = request.POST.get('nameen')
+            org.uDate_org = now()
+            org.uId_u_org = curUser.id_u
+            org.save()
+            
+            messages.success(request,'Update success')
+        except Exception:
+            messages.error(request,'Update Error')
+
+        response = HttpResponseRedirect(reverse('indexOrg'))
+        return response
+    
     context = {
         'org': org,
     }
     return render(request,'organization/editorg.html',context)
+
+@custom_is_login
+def deleteOrganization(request: HttpRequest, orgid):
+    curUser: User = request.current_user
+    org = Organization.objects.filter(id_org = orgid).first()
+    org.isActive_org = 0
+    org.uDate_org = now()
+    org.uId_u_org = curUser.id_u
+    org.save()
+    response = HttpResponseRedirect(reverse('indexOrg'))
+    return response
