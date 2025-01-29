@@ -5,5 +5,6 @@ from app_organizations import views
 
 urlpatterns = [
     path('',views.index, name='indexOrg'),
-    path('addorg/', views.addOrganization, name='addOrg')
+    path('addorg/', views.addOrganization, name='addOrg'),
+    path('editorg/<orgid>',views.editOrganization, name='editOrg')
 ]

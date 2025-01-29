@@ -10,11 +10,15 @@ class UserInjectionMiddleware:
 
     def __call__(self, request: HttpRequest):
         token = request.COOKIES.get("session")
-        session = AuthSession.objects.get(key_ss=token)
-        if not session.is_expired():
-            data = session.get_session_data()
-            user = User.getUserById(data['user_id'])
-            request.current_user = user
+        # session = AuthSession.objects.get(key_ss=token)
+        session = AuthSession.objects.filter(key_ss=token).first()
+        if session is not None:
+            if not session.is_expired():
+                data = session.get_session_data()
+                user = User.getUserById(data['user_id'])
+                request.current_user = user
+            else:
+                request.current_user = None
         else:
             request.current_user = None
         
