@@ -25,7 +25,8 @@ def index(request: HttpRequest):
     levels = Level.objects.all()
     # print(os.getenv('SECRET_KEY'))
 
-    users = User.objects.all()
+    # users = User.objects.all()
+    users: list[User] = list(User.objects.filter(isActive_u = 1))
     authUsers = AuthUser.objects.all()
     orgsObj = Organization.objects.filter(isActive_org = 1)
 
@@ -44,7 +45,8 @@ def index(request: HttpRequest):
                 'id_u':user.id_u,
                 'fullName': "( "+code+" ) "+user.fName_u+" "+user.lName_u,
                 'hasAccount': any(authUser.id_u_auth == user.id_u for authUser in authUsers),
-                "orgName": orgName
+                "orgName": orgName,
+                "email": user.email_u,
             }
         )
 
@@ -113,7 +115,7 @@ def addUser(request: HttpRequest):
         user.id_org_u = request.POST.get('org')
         user.save()
         # print(user.__dict__)
-
+        messages.success(request,'Save Success')
         response = HttpResponseRedirect(reverse('userIndex'))
         return response
         # print(request.POST.get('isadmin')) # จะคืนค่า "on" ถ้าติ๊ก, หรือ None ถ้าไม่ได้ติ๊ก
@@ -133,6 +135,11 @@ def addUser(request: HttpRequest):
 @custom_is_login
 def editUser(request: HttpRequest, iduser):
     user = User.objects.filter(id_u = iduser).first()
+    if user is None:
+        messages.error(request,'Not Found User')
+        response = HttpResponseRedirect(reverse('userIndex'))
+        return response
+
     # print(user.__dict__)
     orgs:list[Organization] = list(Organization.objects.filter(isActive_org = 1).order_by('-id_org'))
     selectNull = Organization()
@@ -156,7 +163,7 @@ def editUser(request: HttpRequest, iduser):
         if authUser is not None:
             authUser.email_auth = request.POST.get('email')
             authUser.save()
-
+        messages.success(request,'Edit Success')
         response = HttpResponseRedirect(reverse('userIndex'))
         return response
 
@@ -166,6 +173,26 @@ def editUser(request: HttpRequest, iduser):
         'orgs':orgs,
     }
     return render(request, 'user/edituser.html', context)
+
+@custom_is_login
+def deleteUser(request: HttpRequest,iduser):
+    user = User.objects.filter(id_u = iduser).first()
+    if user is None:
+        messages.error(request,'Not Found User')
+        return HttpResponseRedirect(reverse('userIndex'))
+    
+    user.isActive_u = 0
+    user.uDate_u = now()
+    user.save()
+
+    authUser = AuthUser.objects.filter(id_u_auth = iduser).first()
+    if authUser is not None:
+        authUser.isActive_auth = 0
+        authUser.save()
+
+    messages.success(request,'Delete Success')
+    response = HttpResponseRedirect(reverse('userIndex'))
+    return response
 
 @custom_is_login
 def regis(request: HttpRequest, id_u):

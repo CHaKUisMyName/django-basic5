@@ -1,19 +1,27 @@
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from app_users.models.authsession import AuthSession
-
+from django.utils.timezone import now
+from pprint import pprint
 
 def custom_is_login(view_func):
     def wrapper(request: HttpRequest, *args,**kwargs):
         try:
             token = request.COOKIES.get("session")
-            # session = AuthSession.objects.get(key_ss=token)
+            
+            # delete session ที่ตกค้าง
+            epSeession = AuthSession.objects.filter(expireDate_ss__lt= now())
+            if len(epSeession) > 0:
+                print('test')
+                print(len(epSeession))
+                epSeession.delete()
+
+            # หา user
             session = AuthSession.objects.filter(key_ss=token).first()
-            # print(session.is_expired())
             if session is not None:
                 if not session.is_expired():
                     data = session.get_session_data()
-                    # print(data)
+                    print(data)
                 else:
                     print("Session expired")
                     session.delete_session_data()
