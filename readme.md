@@ -23,13 +23,13 @@ python -m venv env
 Activate venv สำหรับ Windows
 
 ```
- $ venv\Scripts\activate
+ $ env\Scripts\activate
 ```
 
 Activate venv สำหรับ macOS/Linux
 
 ```
-source venv/bin/activate
+source env/bin/activate
 ```
 
 - pull this project branch main
