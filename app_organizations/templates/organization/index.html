@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% load static %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/datatables.bootstrap5.css' %}">
+  <link href="{% static 'css/sweetalert2.min.css' %}" rel="stylesheet">
+{% endblock %}
 {% block title %}<title>Organization index</title>{% endblock %}
 {% block content %}
   <div class="row">
