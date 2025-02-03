@@ -19,7 +19,8 @@ python -m venv env
 ```
 
 - activate venv
-  Activate venv สำหรับ Windows
+
+Activate venv สำหรับ Windows
 
 ```
  $ venv\Scripts\activate
