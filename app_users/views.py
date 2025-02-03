@@ -113,7 +113,7 @@ def addUser(request: HttpRequest):
         user.cDate_u = now()
         user.uDate_u = now()
         user.id_org_u = request.POST.get('org')
-        user.save()
+        # user.save()
         # print(user.__dict__)
         messages.success(request,'Save Success')
         response = HttpResponseRedirect(reverse('userIndex'))
@@ -197,7 +197,12 @@ def deleteUser(request: HttpRequest,iduser):
 @custom_is_login
 def regis(request: HttpRequest, id_u):
     print(id_u)
-    user = User.objects.get(id_u = id_u)
+    # user = User.objects.get(id_u = id_u)
+    user = User.objects.filter(id_u = id_u).first()
+    if user is None:
+        response = HttpResponseRedirect(reverse("userIndex"))
+        return response
+
     if request.method == "POST":
         authUser = AuthUser()
         authUser.email_auth = request.POST.get('email')
