@@ -13,7 +13,24 @@ django project playground use python 3.13.1 pyenv venv bootstrap5, project is CR
 - install pyenv
 - use pyenv python version
 - create venv
+
+```
+python -m venv env
+```
+
 - activate venv
+  Activate venv สำหรับ Windows
+
+```
+ $ venv\Scripts\activate
+```
+
+Activate venv สำหรับ macOS/Linux
+
+```
+source venv/bin/activate
+```
+
 - pull this project branch main
 - install lib
 
